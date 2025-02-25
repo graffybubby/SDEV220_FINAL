@@ -11,18 +11,18 @@ class Application:
         self.display_suppliers()    
 
     def create_widgets(self):
-  
+        pass
 
     def create_plant(self):
-
+        pass
 
     def create_supplier(self):
-
+        pass
 
     def display_plants(self):
-
+        pass
 
     def display_suppliers(self):    
-
+        pass
 
 

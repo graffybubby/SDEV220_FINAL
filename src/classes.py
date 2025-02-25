@@ -31,7 +31,7 @@ class Db_Entry:
         self.table_payload = ''
         self.db = dbtools.dbtools()
     
-    def collect_data(self, which): # which represents the data to be collected. For a single element use the data"s name i.e. "id", "name", etc. for a full plant of data use "all"
+    def collect_data(self, which): # which represents the data to be collected. For a single element use the data's name i.e. "id", "name", etc. for a full item of data use "all"
         # convert which into lower case
         which = which.lower()
         # if which is entered as "all" collect the values of all attributes and set them.
@@ -57,7 +57,8 @@ class Db_Entry:
             raise ValueError(f"Data type {which} not recognized, please try again.")
 
         return response
-    
+
+    # setter for all attributes
     def set_value(self, value_type):
         value_type = value_type.lower()
         if hasattr(self, value_type):  # Ensure the attribute exists
@@ -77,8 +78,6 @@ class Db_Entry:
    # sends a full object item to the database  
     def send_data_all(self, what):
         what = what.lower()
-
-       
         if what == "all":
             data = (self.table_payload,)
             for key in self.types.keys():
@@ -88,14 +87,14 @@ class Db_Entry:
             self.db.add_data(data)
 
         else:
-            raise ValueError(f"Error: {what} is not a valid attribute of Plant.")
+            raise ValueError(f"Error: {what} is not a valid attribute of {self}.")
 
     # updates db
     def update_data(self, data_queary): # data order select(*), class name(table), desired update(...)
         data_queary = ("name", "rose", "lilly")
     
         if len(data_queary) == 2 and data_queary[0] in self.types and validator(data_queary[1]) == data_queary[1]:
-            table = __class__.__name__
+            table = self.__class__.__name__›
             data_to_find = ("id", table, data_queary[0], data_queary[1])
             try:
                 id = self.db.find(data_to_find)
@@ -103,14 +102,6 @@ class Db_Entry:
             else: 
                 data_to_send = (table, data_queary[2], id)
                 self.db.update(data_to_send)
-
-            
-            
-
-
-
-
-
 
     
 
@@ -134,12 +125,18 @@ class Plant(Db_Entry):
 
     
         
-class Supplier:
+class Supplier(Db_Entry):
     def __init__(self, id, name, address, phone):
         self.name = name
         self.address = address
         self.phone = phone
         self.id = id
+        self.types = {
+            "id": "int",
+            "name": "str",
+            "address": "str",
+            "phone": "str",
+        }
 
 test = Plant(10, 30, "Rose", "A thorny red bush!", 1, 20)
 
